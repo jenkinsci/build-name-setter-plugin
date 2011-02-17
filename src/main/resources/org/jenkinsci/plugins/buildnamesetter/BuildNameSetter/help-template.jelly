@@ -1,0 +1,6 @@
+<div>
+    Normally, builds are named by their sequential numbers, but you can change that here by
+    setting what name new build gets. This field can contain the following macros:
+
+    <help xmlns="/lib/token-macro" />
+</div>
