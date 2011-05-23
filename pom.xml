@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>build-name-setter</artifactId>
-  <version>1.1</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Build+Name+Setter+Plugin</url>
