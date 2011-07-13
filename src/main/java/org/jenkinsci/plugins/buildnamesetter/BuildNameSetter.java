@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class BuildNameSetter extends BuildWrapper {
 
-    public final String template;
+    public String template;
 
     @DataBoundConstructor
     public BuildNameSetter(String template) {
@@ -44,6 +44,7 @@ public class BuildNameSetter extends BuildWrapper {
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
         try {
+            template = build.getEnvironment(listener).expand(template);
             build.setDisplayName(TokenMacro.expand(build, listener, template));
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
