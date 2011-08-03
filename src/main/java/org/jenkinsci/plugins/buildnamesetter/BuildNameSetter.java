@@ -2,6 +2,9 @@ package org.jenkinsci.plugins.buildnamesetter;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -20,7 +23,7 @@ import java.io.IOException;
  *
  * @author Kohsuke Kawaguchi
  */
-public class BuildNameSetter extends BuildWrapper {
+public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
     public final String template;
 
@@ -48,6 +51,22 @@ public class BuildNameSetter extends BuildWrapper {
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }
+    }
+
+    public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
+        return new MatrixAggregator(build,launcher,listener) {
+            @Override
+            public boolean startBuild() throws InterruptedException, IOException {
+                setDisplayName(build,listener);
+                return super.startBuild();
+            }
+
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                setDisplayName(build,listener);
+                return super.endBuild();
+            }
+        };
     }
 
     @Extension
