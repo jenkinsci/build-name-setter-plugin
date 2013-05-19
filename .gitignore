@@ -3,3 +3,4 @@ work
 *.iml
 *.ipr
 *.iws
+.DS_Store
