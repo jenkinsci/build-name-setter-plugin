@@ -17,7 +17,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import java.io.IOException;
 
 /**
- * Set the name twice.
+ * Sets the build name at two configurable points during the build.
  *
  * Once early on in the build, and another time later on.
  *
@@ -26,20 +26,30 @@ import java.io.IOException;
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
     public final String template;
+    public final Boolean runAtStart;
+    public final Boolean runAtEnd;
 
     @DataBoundConstructor
-    public BuildNameSetter(String template) {
+    public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
         this.template = template;
+        this.runAtStart = runAtStart;
+        this.runAtEnd = runAtEnd;
     }
 
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        setDisplayName(build, listener);
+        if (runAtStart)
+        {
+            setDisplayName(build, listener);
+        }
 
         return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                setDisplayName(build, listener);
+                if (runAtEnd)
+                {
+                    setDisplayName(build, listener);
+                }
                 return true;
             }
         };
