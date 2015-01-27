@@ -1,9 +1,9 @@
 <div>
     Normally, builds are named by their sequential numbers, but you can change that here by
     setting what name new build gets. This field can contain the following macros:
-
+    <br>
     <help xmlns="/lib/token-macro" />
-    
+    <br>
     For multi-configuration projects: if the Matrix Build Name is set and the Build 
     Name field is not set, then the head build and child builds will all use the Matrix Build 
     Name's pattern.
