@@ -29,7 +29,6 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
 
     public final String template;
     public final String matrixTemplate;
-    public boolean isMatrix;
 
     @DataBoundConstructor
     public BuildNameSetter(String template, String matrixTemplate) {
@@ -57,7 +56,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
  	   try {
- 		   if(isMatrix(build)){
+ 		   if(build instanceof MatrixBuild){
 	    		build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
 	       }else{
 	    	   build.setDisplayName(TokenMacro.expandAll(build, listener, template));
@@ -98,14 +97,6 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         public boolean isMatrix(AbstractProject<?,?> proj){
         	return proj instanceof MatrixProject;
         }
-    }
-    public boolean isMatrix(AbstractBuild build){
-    	if(build instanceof MatrixBuild){
-    		isMatrix = true;
-    	} else {
-    		isMatrix = false;
-    	}
-    	return isMatrix;
     }
     
 }
