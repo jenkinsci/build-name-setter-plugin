@@ -3,4 +3,7 @@
 	<f:entry title="${%Build Name}" field="template">
 		<f:textbox default="#$${BUILD_NUMBER}" />
 	</f:entry>
+	<f:entry title="${%Matrix Build Name}" field="matrixTemplate">
+		<f:textbox default="#$${BUILD_NUMBER}" />
+	</f:entry>
 </j:jelly>

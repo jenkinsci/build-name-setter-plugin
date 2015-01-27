@@ -26,16 +26,17 @@ import java.io.IOException;
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
     public final String template;
+    public final String matrixTemplate;
 
     @DataBoundConstructor
-    public BuildNameSetter(String template) {
+    public BuildNameSetter(String template, String matrixTemplate) {
         this.template = template;
+        this.matrixTemplate = matrixTemplate;
     }
-
+    
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         setDisplayName(build, listener);
-
         return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
@@ -46,7 +47,14 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-        try {
+       if(matrixTemplate.length()>0){
+    	   try {
+               build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+           } catch (MacroEvaluationException e) {
+               listener.getLogger().println(e.getMessage());
+           }  
+       }
+    	try {
             build.setDisplayName(TokenMacro.expandAll(build, listener, template));
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
