@@ -34,6 +34,11 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         this.matrixTemplate = matrixTemplate;
     }
     
+    public BuildNameSetter(String template) {
+        this.template = template;
+        this.matrixTemplate = "";
+    }
+    
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         setDisplayName(build, listener);
