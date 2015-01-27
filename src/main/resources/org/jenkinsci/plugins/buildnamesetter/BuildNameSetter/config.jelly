@@ -6,6 +6,6 @@
 		</f:entry>
 	</j:if>
 	<f:entry title="${%Build Name}" field="template">
-		<f:textbox default="#$${BUILD_NUMBER}" />
+		<f:textbox default="" />
 	</f:entry>
 </j:jelly>
