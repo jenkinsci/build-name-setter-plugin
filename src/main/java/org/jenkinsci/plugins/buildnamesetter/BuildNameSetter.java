@@ -94,7 +94,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
 	    			build.setDisplayName(TokenMacro.expandAll(build, listener, template));
     				return;
     		case -1:
-    				throw new Exception("SetUp not performed!");
+    				throw new Exception("No valid values set for build names!");
     		}
     	} catch (MacroEvaluationException e) {
           listener.getLogger().println(e.getMessage());
