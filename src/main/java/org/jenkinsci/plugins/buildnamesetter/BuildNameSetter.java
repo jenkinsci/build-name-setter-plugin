@@ -57,6 +57,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         try{
+        	//not checking before setting name because this check is done via Jelly call to isMatrix()
         	setDisplayName(build, listener);
         }catch(Exception e){
         	e.printStackTrace();
