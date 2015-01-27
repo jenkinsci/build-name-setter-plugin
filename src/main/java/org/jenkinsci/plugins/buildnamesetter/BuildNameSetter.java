@@ -29,11 +29,23 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
 
     public final String template;
     public final String matrixTemplate;
-
+    private boolean matches;
+    private int scenario = -1;
+    private boolean started = false;
+    
     @DataBoundConstructor
     public BuildNameSetter(String template, String matrixTemplate) {
         this.template = template;
         this.matrixTemplate = matrixTemplate;
+        matches = template.equals(matrixTemplate);
+        
+        if(matches || matrixTemplate.length()>0 && template.length()==0){
+        	scenario = 0;
+        }else if (matrixTemplate.length()>0 && template.length()>0){
+        	scenario = 1;
+        }else if (matrixTemplate.length()==0 && template.length()>0){
+        	scenario = 2;
+        }
     }
     
     @Deprecated
@@ -44,43 +56,77 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        setDisplayName(build, listener);
-        return new Environment() {
+        try{
+        	setDisplayName(build, listener);
+        }catch(Exception e){
+        	e.printStackTrace();
+        	return null;
+        }
+    	return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                setDisplayName(build, listener);
-                return true;
+                try {
+					setDisplayName(build, listener);
+	                return true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+                return false;
             }
-        };
+    	};
     }
 
-    private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
- 	   try {
- 		   if(build instanceof MatrixBuild){
-	    		build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
-	       }else{
-	    	   build.setDisplayName(TokenMacro.expandAll(build, listener, template));
-	       }
- 	  } catch (MacroEvaluationException e) {
+    private void setDisplayName(AbstractBuild build, BuildListener listener) throws Exception {
+    	try{
+    		switch(scenario){
+    		case 0:
+    	    		build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+    				return;
+    		case 1:
+	    			if(started){	
+	    				build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+	    			}else{
+	    				build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+	    			}
+    				return;
+    		case 2:
+	    			build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+    				return;
+    		case -1:
+    				throw new Exception("SetUp not performed!");
+    		}
+    	} catch (MacroEvaluationException e) {
           listener.getLogger().println(e.getMessage());
-      }  
+    	}  
     }
 
     public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
         return new MatrixAggregator(build,launcher,listener) {
             @Override
             public boolean startBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
-                return super.startBuild();
+                try {
+					setDisplayName(build,listener);
+					started = true;
+	                return super.startBuild();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+                return false;
             }
 
             @Override
             public boolean endBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
-                return super.endBuild();
+            	try{
+            		setDisplayName(build,listener);
+            		return super.endBuild();
+            	}catch(Exception e){
+            		e.printStackTrace();
+            	}
+            	return false;
             }
         };
     }
+   
 
     @Extension
     public static class DescriptorImpl extends BuildWrapperDescriptor {
