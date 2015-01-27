@@ -3,9 +3,9 @@
 	<f:entry title="${%Build Name}" field="template">
 		<f:textbox default="#$${BUILD_NUMBER}" />
 	</f:entry>
-	<f:optionalBlock name="matrixform" test="descriptor:isMatrix(it)">
+	<j:if test="descriptor:isMatrix(it)">
 		<f:entry title="${%Matrix Build Name}" field="matrixTemplate">
 			<f:textbox default="#$${BUILD_NUMBER}" />
 		</f:entry>
-	</f:optionalBlock>
+	</j:if>
 </j:jelly>
