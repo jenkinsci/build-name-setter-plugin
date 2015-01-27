@@ -104,12 +104,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     	return isMatrix;
     }
     
-    public boolean isMatrix(AbstractProject proj){
-    	if(proj instanceof MatrixProject){
-    		isMatrix = true;
-    	} else {
-    		isMatrix = false;
-    	}
-    	return isMatrix;
+    public boolean isMatrix(AbstractProject<?,?> proj){
+    	return proj instanceof MatrixProject;
     }
 }
