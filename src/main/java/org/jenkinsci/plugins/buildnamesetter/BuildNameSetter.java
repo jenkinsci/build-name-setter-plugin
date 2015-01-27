@@ -34,9 +34,10 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         this.matrixTemplate = matrixTemplate;
     }
     
+    @DataBoundConstructor
     public BuildNameSetter(String template) {
         this.template = template;
-        this.matrixTemplate = "";
+        this.matrixTemplate = null;
     }
     
     @Override
@@ -52,18 +53,15 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-       if(build instanceof MatrixBuild){
-    	   try {
-               build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
-           } catch (MacroEvaluationException e) {
-               listener.getLogger().println(e.getMessage());
-           }  
-       }
-    	try {
-            build.setDisplayName(TokenMacro.expandAll(build, listener, template));
-        } catch (MacroEvaluationException e) {
-            listener.getLogger().println(e.getMessage());
-        }
+ 	   try {
+ 		   if(build instanceof MatrixBuild){
+	    		build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+	       }else{
+	    	   build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+	       }
+ 	  } catch (MacroEvaluationException e) {
+          listener.getLogger().println(e.getMessage());
+      }  
     }
 
     public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
