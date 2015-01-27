@@ -51,7 +51,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     @Deprecated
     public BuildNameSetter(String template) {
         this.template = template;
-        this.matrixTemplate = null;
+        this.matrixTemplate = template;
     }
     
     @Override
