@@ -47,7 +47,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-       if(matrixTemplate.length()>0){
+       if(build instanceof MatrixBuild){
     	   try {
                build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
            } catch (MacroEvaluationException e) {
