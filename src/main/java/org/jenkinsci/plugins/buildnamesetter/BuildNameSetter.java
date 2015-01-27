@@ -5,11 +5,13 @@ import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -93,9 +95,17 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
             return "Set Build Name";
         }
     }
-    
     public boolean isMatrix(AbstractBuild build){
     	if(build instanceof MatrixBuild){
+    		isMatrix = true;
+    	} else {
+    		isMatrix = false;
+    	}
+    	return isMatrix;
+    }
+    
+    public boolean isMatrix(AbstractProject proj){
+    	if(proj instanceof MatrixProject){
     		isMatrix = true;
     	} else {
     		isMatrix = false;
