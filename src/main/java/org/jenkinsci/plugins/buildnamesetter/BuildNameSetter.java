@@ -94,6 +94,10 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         public String getDisplayName() {
             return "Set Build Name";
         }
+        
+        public boolean isMatrix(AbstractProject<?,?> proj){
+        	return proj instanceof MatrixProject;
+        }
     }
     public boolean isMatrix(AbstractBuild build){
     	if(build instanceof MatrixBuild){
@@ -104,7 +108,4 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     	return isMatrix;
     }
     
-    public boolean isMatrix(AbstractProject<?,?> proj){
-    	return proj instanceof MatrixProject;
-    }
 }
