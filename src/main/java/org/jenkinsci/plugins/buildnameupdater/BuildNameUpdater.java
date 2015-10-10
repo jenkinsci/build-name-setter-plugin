@@ -101,7 +101,7 @@ public class BuildNameUpdater extends Builder {
             buildNameToSet = macroFirst ? evaluatedMacro + buildNameToSet : buildNameToSet + evaluatedMacro;
         }
 
-        if (!buildNameToSet.isEmpty()) {
+        if (buildNameToSet != null && !buildNameToSet.isEmpty()) {
             setDisplayName(build, listener, buildNameToSet);
         }
 
@@ -159,7 +159,7 @@ public class BuildNameUpdater extends Builder {
         }
 
         listener.getLogger().println("Loaded version is " + version);
-        return version;
+        return version == null ? "" : version;
     }
 
     @Override
@@ -175,6 +175,7 @@ public class BuildNameUpdater extends Builder {
             this.buildName = buildName;
         }
 
+        @SuppressWarnings("unused")
         public String getBuildName() {
             return buildName;
         }
@@ -190,10 +191,12 @@ public class BuildNameUpdater extends Builder {
             this.macroFirst = macroFirst;
         }
 
+        @SuppressWarnings("unused")
         public String getMacroTemplate() {
             return macroTemplate;
         }
 
+        @SuppressWarnings("unused")
         public boolean getMacroFirst() {
             return macroFirst;
         }
