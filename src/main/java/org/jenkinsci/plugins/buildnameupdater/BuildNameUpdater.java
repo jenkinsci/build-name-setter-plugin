@@ -11,6 +11,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -21,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,28 +39,16 @@ public class BuildNameUpdater extends Builder {
     private final boolean fromMacro;
     private final boolean macroFirst;
 
+    private static final Logger LOGGER = Logger.getLogger(BuildNameUpdater.class.getName());
+
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public BuildNameUpdater(BuildNameFromFile nameFromFile, BuildNameFromMacro nameFromMacro) {
-        if (nameFromFile != null) {
-            this.buildName = nameFromFile.buildName;
-            this.fromFile = true;
-        }
-        else {
-            this.buildName = "";
-            this.fromFile = false;
-        }
-
-        if (nameFromMacro != null) {
-            this.macroTemplate = nameFromMacro.macroTemplate;
-            this.fromMacro = true;
-            this.macroFirst = nameFromMacro.macroFirst;
-        }
-        else {
-            this.macroTemplate = "";
-            this.fromMacro = false;
-            this.macroFirst = false;
-        }
+    public BuildNameUpdater(boolean fromFile, String buildName, boolean fromMacro, String macroTemplate, boolean macroFirst) {
+        this.buildName = buildName;
+        this.macroTemplate = macroTemplate;
+        this.fromFile = fromFile;
+        this.fromMacro = fromMacro;
+        this.macroFirst = macroFirst;
     }
 
     @SuppressWarnings("unused")
@@ -101,7 +92,7 @@ public class BuildNameUpdater extends Builder {
             buildNameToSet = macroFirst ? evaluatedMacro + buildNameToSet : buildNameToSet + evaluatedMacro;
         }
 
-        if (buildNameToSet != null && !buildNameToSet.isEmpty()) {
+        if (StringUtils.isNotBlank(buildNameToSet)) {
             setDisplayName(build, listener, buildNameToSet);
         }
 
@@ -110,14 +101,14 @@ public class BuildNameUpdater extends Builder {
 
     private void setDisplayName(AbstractBuild build, BuildListener listener, String result) {
         listener.getLogger().println("Setting build name to '" + result + "'");
-        if (result.isEmpty()) {
+        if (StringUtils.isBlank(result)) {
             listener.getLogger().println("Build name is empty, nothing to set.");
             return;
         }
         try {
             build.setDisplayName(result);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
         }
     }
 
@@ -127,20 +118,21 @@ public class BuildNameUpdater extends Builder {
             result = TokenMacro.expandAll(build, listener, macro);
         } catch (MacroEvaluationException e) {
             listener.getLogger().println("Failed to evaluate macro '" + macro + "'");
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to evaluate macro '" + macro + "': ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Exception was thrown during macro evaluation: ", e);
         } catch (InterruptedException e) {
+            LOGGER.log(Level.WARNING, "Macro evaluation was interrupted: ", e);
             listener.getLogger().println("Macro evaluating failed with:");
-            e.printStackTrace();
         }
+        LOGGER.log(Level.INFO, "Macro evaluated: '" + result + "'");
         return result;
     }
 
     private String readFromFile(AbstractBuild build, BuildListener listener, String filePath){
         String version = "";
 
-        if (filePath == null || filePath.isEmpty()){
+        if (StringUtils.isNotBlank(filePath)){
             listener.getLogger().println("File path is empty.");
             return "";
         }
@@ -152,10 +144,9 @@ public class BuildNameUpdater extends Builder {
         try {
             version = fp.act(new MyFileCallable());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to read file: ", e);
         } catch (InterruptedException e) {
-            listener.getLogger().println("Macro evaluating failed with:");
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Getting name from file was interrupted: ", e);
         }
 
         listener.getLogger().println("Loaded version is " + version);
@@ -167,50 +158,17 @@ public class BuildNameUpdater extends Builder {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    public static class BuildNameFromFile{
-        private String buildName;
-
-        @DataBoundConstructor
-        public BuildNameFromFile(String buildName){
-            this.buildName = buildName;
-        }
-
-        @SuppressWarnings("unused")
-        public String getBuildName() {
-            return buildName;
-        }
-    }
-
-    public static class BuildNameFromMacro{
-        private String macroTemplate;
-        private boolean macroFirst;
-
-        @DataBoundConstructor
-        public BuildNameFromMacro(String macroTemplate, boolean macroFirst){
-            this.macroTemplate = macroTemplate;
-            this.macroFirst = macroFirst;
-        }
-
-        @SuppressWarnings("unused")
-        public String getMacroTemplate() {
-            return macroTemplate;
-        }
-
-        @SuppressWarnings("unused")
-        public boolean getMacroFirst() {
-            return macroFirst;
-        }
-    }
-
     private static class MyFileCallable implements FilePath.FileCallable<String> {
         private static final long serialVersionUID = 1L;
 
         @Override
         public String invoke(File file, VirtualChannel channel) throws IOException, InterruptedException {
             if (file.getAbsoluteFile().exists()){
+                LOGGER.log(Level.INFO, "File is found, reading...");
                 BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
                 return br.readLine();
             } else {
+                LOGGER.log(Level.WARNING, "File was not found.");
                 return "";
             }
         }
@@ -231,8 +189,7 @@ public class BuildNameUpdater extends Builder {
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            // Indicates that this builder can be used with all kinds of project types
-            return FreeStyleProject.class.isAssignableFrom(jobType);
+            return true;
         }
 
         public String getDisplayName() {
