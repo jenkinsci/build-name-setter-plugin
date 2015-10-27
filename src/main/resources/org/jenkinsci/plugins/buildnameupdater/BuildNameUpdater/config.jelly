@@ -1,0 +1,31 @@
+<!--suppress XmlUnusedNamespaceDeclaration -->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:optionalBlock
+            inline="true"
+            name="fromFile"
+            checked="${instance.fromFile}"
+            title="Read from file">
+
+        <f:entry title="Build name file path" field="buildName">
+            <f:textbox default="version.txt" />
+        </f:entry>
+
+    </f:optionalBlock>
+
+    <f:optionalBlock
+            inline="true"
+            name="fromMacro"
+            checked="${instance.fromMacro}"
+            title="Use macro">
+
+        <f:entry title="Build name macro template" field="macroTemplate">
+            <f:textbox default="#$${BUILD_NUMBER}" value="${instance.macroTemplate}" />
+        </f:entry>
+
+        <f:entry title="Insert macro first" field="macroFirst">
+            <f:checkbox default="false" />
+        </f:entry>
+
+    </f:optionalBlock>
+</j:jelly>

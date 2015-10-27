@@ -26,6 +26,11 @@
       <name>Kohsuke Kawaguchi</name>
       <email>kkawaguchi@cloudbees.com</email>
     </developer>
+    <developer>
+      <id>Le0</id>
+      <name>Lev Mishin</name>
+      <email>leomichine@gmail.com</email>
+    </developer>
   </developers>
 
   <dependencies>

@@ -1,5 +1,6 @@
 target
 work
+.idea
 *.iml
 *.ipr
 *.iws
