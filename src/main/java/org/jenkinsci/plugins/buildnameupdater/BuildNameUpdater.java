@@ -132,7 +132,7 @@ public class BuildNameUpdater extends Builder {
     private String readFromFile(AbstractBuild build, BuildListener listener, String filePath){
         String version = "";
 
-        if (StringUtils.isNotBlank(filePath)){
+        if (StringUtils.isBlank(filePath)){
             listener.getLogger().println("File path is empty.");
             return "";
         }
