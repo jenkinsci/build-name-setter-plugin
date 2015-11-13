@@ -3,4 +3,13 @@
     setting what name new build gets. This field can contain the following macros:
 
     <help xmlns="/lib/token-macro" />
+
+    For multi-configuration projects: if the Matrix Build Name is set and the Build 
+    Name field is not set, then the head build and child builds will all use the Matrix Build 
+    Name's pattern.
+    
+    If both the Matrix Build Name and default build name are set, then the Matrix Build Name
+    will only apply to the head build and child builds will use the value of the Build Name 
+    field. This is useful if child builds will take their name from a dynamically generated 
+    file.
 </div>

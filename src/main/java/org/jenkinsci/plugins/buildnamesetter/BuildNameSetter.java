@@ -5,11 +5,13 @@ import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -26,50 +28,106 @@ import java.io.IOException;
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
     public final String template;
-
+    public final String matrixTemplate;
+    private boolean matches;
+    private int scenario = -1;
+    private boolean started = false;
+    
     @DataBoundConstructor
+    public BuildNameSetter(String template, String matrixTemplate) {
+        this.template = template;
+        this.matrixTemplate = matrixTemplate;
+        matches = template.equals(matrixTemplate);
+        if(matches || matrixTemplate.length()>0 && template.length()==0) {
+            scenario = 0;
+        }else if (matrixTemplate.length()>0 && template.length()>0) {
+            scenario = 1;
+        }else if (matrixTemplate.length()==0 && template.length()>0) {
+            scenario = 2;
+        }
+    }
+    
+    @Deprecated
     public BuildNameSetter(String template) {
         this.template = template;
+        this.matrixTemplate = template;
     }
-
+    
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        setDisplayName(build, listener);
-
-        return new Environment() {
+        try{
+            //not checking before setting name because this check is done via Jelly call to isMatrix()
+            setDisplayName(build, listener);
+        }catch(IllegalArgumentException e) {
+            listener.getLogger().println(e.getMessage());
+            return null;
+        }
+    	return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                setDisplayName(build, listener);
-                return true;
+                try {
+                    setDisplayName(build, listener);
+	            return true;                   
+                } catch (IllegalArgumentException e){
+                    listener.getLogger().println(e.getMessage());   
+                }
+                return false;
             }
-        };
+         };
     }
-
-    private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-        try {
-            build.setDisplayName(TokenMacro.expandAll(build, listener, template));
-        } catch (MacroEvaluationException e) {
+    private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException, IllegalArgumentException {
+    	try{
+            switch(scenario) {
+            case 0:         
+                build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+                return;
+            case 1:
+                if(started) {	
+                    build.setDisplayName(TokenMacro.expandAll(build, listener, matrixTemplate));
+                }else {
+                    build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+                }
+                return;
+            case 2:
+                build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+                return;
+            case -1:
+                listener.getLogger().println("No valid values set for build names!");
+            }
+    	} catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
-        }
+    	}  
     }
 
     public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
         return new MatrixAggregator(build,launcher,listener) {
             @Override
             public boolean startBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
-                return super.startBuild();
+                try {
+                    setDisplayName(build,listener);
+                    started = true;
+	            return super.startBuild();
+                } catch (IllegalArgumentException e){
+                    listener.getLogger().println(e.getMessage());   
+                }
+                return false;
             }
 
             @Override
             public boolean endBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
-                return super.endBuild();
+                try{
+                    setDisplayName(build,listener);
+                    return super.endBuild();
+                } catch (IllegalArgumentException e){
+                    listener.getLogger().println(e.getMessage());   
+                }
+                return false;
             }
         };
     }
+   
 
-    @Extension
+    @Extension(optional = true)
     public static class DescriptorImpl extends BuildWrapperDescriptor {
         @Override
         public boolean isApplicable(AbstractProject<?, ?> item) {
@@ -80,5 +138,10 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         public String getDisplayName() {
             return "Set Build Name";
         }
+        
+        public boolean isMatrix(AbstractProject<?,?> proj) {
+            return proj instanceof MatrixProject;
+        }
     }
+    
 }
