@@ -9,3 +9,6 @@ that lets you specify a build name for each new build.
 
 As the result you can obtain something like this:
 ![alt tag](./Screenshot_build_name.png)
+
+Memo:
+token-macro is not optional at version:1.5.1
