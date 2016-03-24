@@ -20,7 +20,7 @@ public class BuildNameSetterTest {
 	@Test
 	public void shouldExpand_BUILD_NUMBER_macro() throws InterruptedException, ExecutionException, IOException {
 		FreeStyleProject fooProj = jenkins.createFreeStyleProject("foo");
-		fooProj.getBuildWrappersList().add(new BuildNameSetter("a_#${BUILD_NUMBER}")); 
+		fooProj.getBuildWrappersList().add(getDefaultSetter("a_#${BUILD_NUMBER}")); 
 		
 		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
 		asssertDisplayName(fooBuild, "a_#1");
@@ -29,7 +29,7 @@ public class BuildNameSetterTest {
 	@Test
 	public void shouldExpand_JOB_NAME_full_env_macro() throws InterruptedException, ExecutionException, IOException {
 		FreeStyleProject barProj = jenkins.createFreeStyleProject("bar");
-		barProj.getBuildWrappersList().add(new BuildNameSetter("b_${ENV,var=\"JOB_NAME\"}")); 
+		barProj.getBuildWrappersList().add(getDefaultSetter("b_${ENV,var=\"JOB_NAME\"}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
 		asssertDisplayName(barBuild, "b_bar");
@@ -39,7 +39,7 @@ public class BuildNameSetterTest {
 	@Test
 	public void shouldExpand_JOB_NAME_macro() throws InterruptedException, ExecutionException, IOException {
 		FreeStyleProject barProj = jenkins.createFreeStyleProject("bar");
-		barProj.getBuildWrappersList().add(new BuildNameSetter("c_${JOB_NAME}")); 
+		barProj.getBuildWrappersList().add(getDefaultSetter("c_${JOB_NAME}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
 		asssertDisplayName(barBuild, "c_bar");
@@ -49,7 +49,7 @@ public class BuildNameSetterTest {
 	@Test
 	public void shouldExpand_JOB_NAME_macro_twice() throws InterruptedException, ExecutionException, IOException {
 		FreeStyleProject barProj = jenkins.createFreeStyleProject("bar");
-		barProj.getBuildWrappersList().add(new BuildNameSetter("c_${JOB_NAME}_d_${JOB_NAME}")); 
+		barProj.getBuildWrappersList().add(getDefaultSetter("c_${JOB_NAME}_d_${JOB_NAME}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
 		asssertDisplayName(barBuild, "c_bar_d_bar");
@@ -59,7 +59,7 @@ public class BuildNameSetterTest {
 	@Test
 	public void shouldExpand_JOB_NAME_macro_and_JOB_NAME_full_env_macro() throws InterruptedException, ExecutionException, IOException {
 		FreeStyleProject fooProj = jenkins.createFreeStyleProject("foo");
-		fooProj.getBuildWrappersList().add(new BuildNameSetter("d_${NODE_NAME}_${ENV,var=\"JOB_NAME\"}")); 
+		fooProj.getBuildWrappersList().add(getDefaultSetter("d_${NODE_NAME}_${ENV,var=\"JOB_NAME\"}")); 
 		
 		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
 		asssertDisplayName(fooBuild, "d_master_foo");
@@ -68,5 +68,9 @@ public class BuildNameSetterTest {
 	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());
+	}
+
+	private BuildNameSetter getDefaultSetter(String template) {
+		return new BuildNameSetter(template, true, true);
 	}
 }
