@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>build-name-setter</artifactId>
-  <version>1.6.0</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Build+Name+Setter+Plugin</url>
@@ -84,7 +84,7 @@
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
-    <tag>description-setter</tag>
+    <tag>build description setter</tag>
   </scm>
 
   <repositories>
