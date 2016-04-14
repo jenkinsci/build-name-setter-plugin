@@ -26,8 +26,8 @@ import java.io.IOException;
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
     public final String template;
-    public final Boolean runAtStart;
-    public final Boolean runAtEnd;
+    public boolean runAtStart = true;
+    public boolean runAtEnd = true;
 
     @DataBoundConstructor
     public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
