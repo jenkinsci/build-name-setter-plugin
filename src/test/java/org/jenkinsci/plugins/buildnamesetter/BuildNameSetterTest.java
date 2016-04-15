@@ -65,6 +65,16 @@ public class BuildNameSetterTest {
 		asssertDisplayName(fooBuild, "d_master_foo");
 	}
 
+	@Bug(34181)
+	@Test
+	public void shouldUse_default_config_values_if_null() throws InterruptedException, ExecutionException, IOException {
+		FreeStyleProject fooProj = jenkins.createFreeStyleProject("foo");
+		fooProj.getBuildWrappersList().add(new BuildNameSetter("${ENV,var=\"JOB_NAME\"}", null, null));
+
+		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
+		asssertDisplayName(fooBuild, "foo");
+	}
+
 	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());

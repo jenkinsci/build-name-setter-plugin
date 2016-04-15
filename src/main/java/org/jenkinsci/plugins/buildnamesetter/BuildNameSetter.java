@@ -10,11 +10,14 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import org.apache.commons.lang.BooleanUtils;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
+
+import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
 
 /**
  * Sets the build name at two configurable points during the build.
@@ -32,8 +35,8 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     @DataBoundConstructor
     public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
         this.template = template;
-        this.runAtStart = runAtStart;
-        this.runAtEnd = runAtEnd;
+        this.runAtStart = toBooleanDefaultIfNull(runAtStart, true);
+        this.runAtEnd = toBooleanDefaultIfNull(runAtEnd, true);
     }
 
     @Override
