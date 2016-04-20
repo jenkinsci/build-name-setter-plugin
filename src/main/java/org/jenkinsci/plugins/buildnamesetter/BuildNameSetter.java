@@ -10,7 +10,7 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import org.apache.commons.lang.BooleanUtils;
+import org.jenkinsci.plugins.EnvironmentHelper;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -27,7 +27,6 @@ import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
  * @author Kohsuke Kawaguchi
  */
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
-
     public final String template;
     public boolean runAtStart = true;
     public boolean runAtEnd = true;
@@ -59,8 +58,12 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
+        listener.getLogger().println("Set build name.");
         try {
-            build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+            String name = TokenMacro.expandAll(build, listener, template);
+            listener.getLogger().println("New build name is '" + name + "'");
+            build.setDisplayName(name);
+            EnvironmentHelper.SetEnvironmentVariable("NEW_BUILD_NAME", name, listener.getLogger());
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }
