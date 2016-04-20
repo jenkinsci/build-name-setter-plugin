@@ -6,12 +6,12 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.model.FreeStyleProject;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.EnvironmentHelper;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -107,6 +107,7 @@ public class BuildNameUpdater extends Builder {
         }
         try {
             build.setDisplayName(result);
+            EnvironmentHelper.SetEnvironmentVariable("NEW_BUILD_NAME", result, listener.getLogger());
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
         }
@@ -161,7 +162,6 @@ public class BuildNameUpdater extends Builder {
     private static class MyFileCallable implements FilePath.FileCallable<String> {
         private static final long serialVersionUID = 1L;
 
-        @Override
         public String invoke(File file, VirtualChannel channel) throws IOException, InterruptedException {
             if (file.getAbsoluteFile().exists()){
                 LOGGER.log(Level.INFO, "File is found, reading...");
