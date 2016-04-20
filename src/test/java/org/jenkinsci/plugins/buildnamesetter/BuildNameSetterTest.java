@@ -8,6 +8,7 @@ import hudson.model.FreeStyleProject;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import org.jenkinsci.plugins.EnvironmentHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.Bug;
@@ -78,6 +79,7 @@ public class BuildNameSetterTest {
 	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());
+		assertEquals(expectedName, EnvironmentHelper.GetEnvironmentVariable("NEW_BUILD_NAME"));
 	}
 
 	private BuildNameSetter getDefaultSetter(String template) {
