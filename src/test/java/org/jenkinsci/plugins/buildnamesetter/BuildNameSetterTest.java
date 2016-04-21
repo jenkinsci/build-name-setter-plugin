@@ -79,7 +79,7 @@ public class BuildNameSetterTest {
 	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());
-		assertEquals(expectedName, EnvironmentHelper.GetEnvironmentVariable("NEW_BUILD_NAME"));
+		assertEquals(expectedName, EnvironmentHelper.GetEnvironmentVariable(EnvironmentHelper.BuildDisplayNameVar));
 	}
 
 	private BuildNameSetter getDefaultSetter(String template) {

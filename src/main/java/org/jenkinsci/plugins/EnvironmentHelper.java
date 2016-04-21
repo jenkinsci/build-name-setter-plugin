@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 public class EnvironmentHelper {
     private static final Logger LOGGER = Logger.getLogger(EnvironmentHelper.class.getName());
 
+	public static final String BuildDisplayNameVar = "NEW_BUILD_NAME";
+	
     public static void SetEnvironmentVariable(@CheckForNull String key, @CheckForNull String value, PrintStream logger) {
         if (StringUtils.isBlank(key)) {
             logger.println("Unable to set variable with empty key.");
@@ -52,7 +54,7 @@ public class EnvironmentHelper {
                 Hudson.getInstance().getGlobalNodeProperties().add(
                         new EnvironmentVariablesNodeProperty(new EnvironmentVariablesNodeProperty.Entry(key, value)));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.println("Failed to set variable because of exception");
             logger.println(e.getMessage());
         }

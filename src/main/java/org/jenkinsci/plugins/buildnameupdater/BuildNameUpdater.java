@@ -107,7 +107,7 @@ public class BuildNameUpdater extends Builder {
         }
         try {
             build.setDisplayName(result);
-            EnvironmentHelper.SetEnvironmentVariable("NEW_BUILD_NAME", result, listener.getLogger());
+            EnvironmentHelper.SetEnvironmentVariable(EnvironmentHelper.BuildDisplayNameVar, result, listener.getLogger());
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
         }

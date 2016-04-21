@@ -63,7 +63,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
             String name = TokenMacro.expandAll(build, listener, template);
             listener.getLogger().println("New build name is '" + name + "'");
             build.setDisplayName(name);
-            EnvironmentHelper.SetEnvironmentVariable("NEW_BUILD_NAME", name, listener.getLogger());
+            EnvironmentHelper.SetEnvironmentVariable(EnvironmentHelper.BuildDisplayNameVar, name, listener.getLogger());
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }
