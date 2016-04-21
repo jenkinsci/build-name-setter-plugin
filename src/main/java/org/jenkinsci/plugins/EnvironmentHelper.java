@@ -37,7 +37,7 @@ public class EnvironmentHelper {
                 if (node instanceof EnvironmentVariablesNodeProperty) {
                     EnvironmentVariablesNodeProperty envNode = (EnvironmentVariablesNodeProperty) node;
                     if (envNode.getEnvVars().containsKey(key)) {
-                        logger.println("Variable already exists, update value");
+                        logger.println("Variable already exist, update value");
                         envNode.getEnvVars().put(key, value);
                         return;
                     }
