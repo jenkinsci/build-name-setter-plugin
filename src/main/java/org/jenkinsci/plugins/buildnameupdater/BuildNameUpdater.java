@@ -164,6 +164,7 @@ public class BuildNameUpdater extends Builder {
     private static class MyFileCallable implements FilePath.FileCallable<String> {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public String invoke(File file, VirtualChannel channel) throws IOException, InterruptedException {
             if (file.getAbsoluteFile().exists()){
                 LOGGER.log(Level.INFO, "File is found, reading...");
