@@ -29,11 +29,11 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
         EnvironmentVarSetter action = build.getAction(EnvironmentVarSetter.class);
         if (action == null) {
             action = new EnvironmentVarSetter(key, value, logger);
+            build.addAction(action);
         }
         else {
             action.setVar(key, value);
         }
-        build.addAction(action);
     }
 
     public void setVar(@CheckForNull String key, @CheckForNull String value) {
@@ -44,21 +44,25 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
             throw new IllegalArgumentException("value shouldn't be null or empty.");
         }
 
-        log.println("Create var " + key + "=" + value);
         if (envVars.containsKey(key)) {
-            log.println("Current value '" + envVars.get(key) + "'");
+            log.println(
+                    "Variable with name '" + key + "' already exists, current value: '" + envVars.get(key) +
+                            "', new value: '" + value + "'");
         }
+        else {
+            log.println("Create new variable " + key + "=" + value);
+        }
+
         envVars.put(key, value);
     }
 
     public String getVar(String key) {
-        log.println("Get var '" + key + "'");
         if (envVars.containsKey(key)) {
-            log.println(key + "=" + envVars.get(key));
+            log.println("Get var: " + key + "=" + envVars.get(key));
             return envVars.get(key);
         }
         else {
-            log.println("Var doesn't exist");
+            log.println("Var '" + key + "' doesn't exist");
             return "";
         }
     }
