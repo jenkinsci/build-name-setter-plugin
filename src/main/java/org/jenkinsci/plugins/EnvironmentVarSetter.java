@@ -67,18 +67,22 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
         }
     }
 
+    @Override
     public void buildEnvVars(AbstractBuild<?, ?> abstractBuild, EnvVars envVars) {
         envVars.putAll(this.envVars);
     }
 
+    @Override
     public String getIconFileName() {
         return null;
     }
 
+    @Override
     public String getDisplayName() {
         return null;
     }
 
+    @Override
     public String getUrlName() {
         return null;
     }
