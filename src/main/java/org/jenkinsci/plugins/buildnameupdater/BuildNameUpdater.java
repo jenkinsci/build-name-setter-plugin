@@ -1,17 +1,19 @@
 package org.jenkinsci.plugins.buildnameupdater;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.EnvironmentContributingAction;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.EnvironmentHelper;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -99,7 +101,7 @@ public class BuildNameUpdater extends Builder {
         return true;
     }
 
-    private void setDisplayName(AbstractBuild build, BuildListener listener, String result) {
+    private void setDisplayName(AbstractBuild build, BuildListener listener, final String result) {
         listener.getLogger().println("Setting build name to '" + result + "'");
         if (StringUtils.isBlank(result)) {
             listener.getLogger().println("Build name is empty, nothing to set.");
@@ -107,7 +109,7 @@ public class BuildNameUpdater extends Builder {
         }
         try {
             build.setDisplayName(result);
-            EnvironmentHelper.SetEnvironmentVariable(EnvironmentHelper.BuildDisplayNameVar, result, listener.getLogger());
+            EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, result, listener.getLogger());
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
         }
