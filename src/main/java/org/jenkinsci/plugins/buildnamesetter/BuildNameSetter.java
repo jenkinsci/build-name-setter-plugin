@@ -30,8 +30,8 @@ import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
  */
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
     public final String template;
-    public boolean runAtStart = true;
-    public boolean runAtEnd = true;
+    public Boolean runAtStart = true;
+    public Boolean runAtEnd = true;
 
     @DataBoundConstructor
     public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
@@ -40,6 +40,16 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         this.runAtEnd = toBooleanDefaultIfNull(runAtEnd, true);
     }
 
+    protected Object readResolve() {
+        if (runAtStart == null) {
+            runAtStart = true;
+        }
+        if (runAtEnd == null) {
+            runAtEnd = true;
+        }
+        return this;
+    }
+	
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         if (runAtStart)
