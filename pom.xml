@@ -84,7 +84,7 @@
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>build description setter</tag>
   </scm>
 
   <repositories>
