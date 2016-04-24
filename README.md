@@ -6,10 +6,10 @@ that lets you specify a build name for each new build. Also this plugin updates 
 
 This plugin can be used in two ways:
 
-1) Set build name at the begining and at the end of the build (both by default, it also can be ajusted)
+* Set build name at the begining and at the end of the build (both by default, it also can be ajusted)
 ![alt tag](./Screenshot_build_env.png)
 
-2) Set build name between two build steps (as a separate build step)
+* Set build name between two build steps (as a separate build step)
 ![alt tag](./Screenshot_build_step.png)
 
 As the result you can obtain something like this:
