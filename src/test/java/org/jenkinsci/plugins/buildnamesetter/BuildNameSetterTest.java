@@ -81,7 +81,7 @@ public class BuildNameSetterTest {
 		assertEquals(expectedName, build.getDisplayName());
 		EnvironmentVarSetter action = build.getAction(EnvironmentVarSetter.class);
 		assertEquals(expectedName, action.getVar(EnvironmentVarSetter.buildDisplayNameVar));
-                EnvVars envVars = null;
+        	EnvVars envVars = null;
         	try {
             		envVars = build.getEnvironment(TaskListener.NULL);
         	} catch (Exception e) {
