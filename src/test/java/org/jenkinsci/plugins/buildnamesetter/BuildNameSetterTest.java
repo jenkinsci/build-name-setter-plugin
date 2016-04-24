@@ -1,13 +1,14 @@
 package org.jenkinsci.plugins.buildnamesetter;
 
 import static org.junit.Assert.assertEquals;
-import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
-import hudson.model.FreeStyleProject;
+
+import hudson.EnvVars;
+import hudson.model.*;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-
+import org.jenkinsci.plugins.EnvironmentVarSetter;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.Bug;
@@ -78,6 +79,16 @@ public class BuildNameSetterTest {
 	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());
+		EnvironmentVarSetter action = build.getAction(EnvironmentVarSetter.class);
+		assertEquals(expectedName, action.getVar(EnvironmentVarSetter.buildDisplayNameVar));
+        	EnvVars envVars = null;
+        	try {
+            		envVars = build.getEnvironment(TaskListener.NULL);
+        	} catch (Exception e) {
+            		e.printStackTrace();
+            		Assert.fail("Exception was thrown during getting build environment.");
+        	}
+        	assertEquals(expectedName, envVars.get(EnvironmentVarSetter.buildDisplayNameVar));
 	}
 
 	private BuildNameSetter getDefaultSetter(String template) {

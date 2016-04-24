@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.buildnamesetter;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
@@ -8,9 +9,10 @@ import hudson.matrix.MatrixBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.EnvironmentContributingAction;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import org.apache.commons.lang.BooleanUtils;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -27,7 +29,6 @@ import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
  * @author Kohsuke Kawaguchi
  */
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
-
     public final String template;
     public Boolean runAtStart = true;
     public Boolean runAtEnd = true;
@@ -59,8 +60,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                if (runAtEnd)
-                {
+                if (runAtEnd) {
                     setDisplayName(build, listener);
                 }
                 return true;
@@ -69,8 +69,12 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
+        listener.getLogger().println("Set build name.");
         try {
-            build.setDisplayName(TokenMacro.expandAll(build, listener, template));
+            final String name = TokenMacro.expandAll(build, listener, template);
+            listener.getLogger().println("New build name is '" + name + "'");
+            build.setDisplayName(name);
+            EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, name, listener.getLogger());
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }
