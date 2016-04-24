@@ -81,13 +81,14 @@ public class BuildNameSetterTest {
 		assertEquals(expectedName, build.getDisplayName());
 		EnvironmentVarSetter action = build.getAction(EnvironmentVarSetter.class);
 		assertEquals(expectedName, action.getVar(EnvironmentVarSetter.buildDisplayNameVar));
-        try {
-            EnvVars envVars = build.getEnvironment(TaskListener.NULL);
-            assertEquals(expectedName, envVars.get(EnvironmentVarSetter.buildDisplayNameVar));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Exception was thrown during getting build environment.");
-        }
+                EnvVars envVars = null;
+        	try {
+            		envVars = build.getEnvironment(TaskListener.NULL);
+        	} catch (Exception e) {
+            		e.printStackTrace();
+            		Assert.fail("Exception was thrown during getting build environment.");
+        	}
+        	assertEquals(expectedName, envVars.get(EnvironmentVarSetter.buildDisplayNameVar));
 	}
 
 	private BuildNameSetter getDefaultSetter(String template) {
