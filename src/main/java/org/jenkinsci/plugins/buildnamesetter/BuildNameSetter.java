@@ -50,8 +50,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                if (runAtEnd)
-                {
+                if (runAtEnd) {
                     setDisplayName(build, listener);
                 }
                 return true;
