@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.CheckForNull;
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class EnvironmentVarSetter implements EnvironmentContributingAction {
     private PrintStream log;
-    private final Map<String, String> envVars = new HashMap<String, String>();
+    private final Map<String, String> envVars = new ConcurrentHashMap<String, String>();
 
     public static final String buildDisplayNameVar = "BUILD_DISPLAY_NAME";
 
