@@ -11,7 +11,7 @@
   <packaging>hpi</packaging>
 
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Build+Name+Setter+Plugin</url>
-  
+
   <licenses>
     <license>
       <name>The MIT license</name>
@@ -45,7 +45,7 @@
       <version>1.11</version>
     </dependency>
   </dependencies>
-  
+
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
@@ -59,11 +59,22 @@
     </repository>
   </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-</project>  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <distributionManagement>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+</project>
 
