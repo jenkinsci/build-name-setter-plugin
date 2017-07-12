@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.buildnamesetter;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
@@ -8,46 +9,72 @@ import hudson.matrix.MatrixBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.EnvironmentContributingAction;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 
+import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
+
 /**
- * Set the name twice.
+ * Sets the build name at two configurable points during the build.
  *
  * Once early on in the build, and another time later on.
  *
  * @author Kohsuke Kawaguchi
  */
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
-
     public final String template;
+    public Boolean runAtStart = true;
+    public Boolean runAtEnd = true;
 
     @DataBoundConstructor
-    public BuildNameSetter(String template) {
+    public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
         this.template = template;
+        this.runAtStart = toBooleanDefaultIfNull(runAtStart, true);
+        this.runAtEnd = toBooleanDefaultIfNull(runAtEnd, true);
     }
 
+    protected Object readResolve() {
+        if (runAtStart == null) {
+            runAtStart = true;
+        }
+        if (runAtEnd == null) {
+            runAtEnd = true;
+        }
+        return this;
+    }
+	
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        setDisplayName(build, listener);
+        if (runAtStart)
+        {
+            setDisplayName(build, listener);
+        }
 
         return new Environment() {
             @Override
             public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                setDisplayName(build, listener);
+                if (runAtEnd) {
+                    setDisplayName(build, listener);
+                }
                 return true;
             }
         };
     }
 
     private void setDisplayName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
+        listener.getLogger().println("Set build name.");
         try {
-            build.setDisplayName(TokenMacro.expand(build, listener, template));
+            final String name = TokenMacro.expandAll(build, listener, template);
+            listener.getLogger().println("New build name is '" + name + "'");
+            build.setDisplayName(name);
+            EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, name, listener.getLogger());
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }

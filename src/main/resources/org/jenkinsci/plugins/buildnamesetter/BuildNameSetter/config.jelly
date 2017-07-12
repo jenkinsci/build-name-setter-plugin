@@ -3,4 +3,12 @@
 	<f:entry title="${%Build Name}" field="template">
 		<f:textbox default="#$${BUILD_NUMBER}" />
 	</f:entry>
+	<f:advanced>
+		<f:entry title="${%Set build name before build starts}">
+			<f:checkbox field="runAtStart" default="true" value="True" />
+		</f:entry>
+		<f:entry title="${%Set build name after build ends}">
+			<f:checkbox field="runAtEnd" default="true" value="True" />
+		</f:entry>
+	</f:advanced>
 </j:jelly>

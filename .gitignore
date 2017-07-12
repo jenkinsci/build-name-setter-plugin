@@ -1,5 +1,7 @@
 target
 work
+.idea
 *.iml
 *.ipr
 *.iws
+.DS_Store
