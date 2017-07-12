@@ -1,24 +1,5 @@
 package org.jenkinsci.plugins.buildnameupdater;
 
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.EnvironmentContributingAction;
-import hudson.remoting.VirtualChannel;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
-import hudson.util.FormValidation;
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.EnvironmentVarSetter;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-
 import javax.servlet.ServletException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,6 +7,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+
+import jenkins.MasterToSlaveFileCallable;
+
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
+import hudson.remoting.VirtualChannel;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Builder;
+import hudson.util.FormValidation;
 
 /**
  *
@@ -161,7 +162,7 @@ public class BuildNameUpdater extends Builder {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    private static class MyFileCallable implements FilePath.FileCallable<String> {
+    private static class MyFileCallable extends MasterToSlaveFileCallable<String> {
         private static final long serialVersionUID = 1L;
 
         @Override
