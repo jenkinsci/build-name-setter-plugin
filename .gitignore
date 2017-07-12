@@ -1,6 +1,7 @@
 target
 work
-.idea
+.*
+!.gitignore
 *.iml
 *.ipr
 *.iws
