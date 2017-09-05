@@ -45,9 +45,11 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
         }
 
         if (envVars.containsKey(key)) {
-            log.println(
-                    "Variable with name '" + key + "' already exists, current value: '" + envVars.get(key) +
-                            "', new value: '" + value + "'");
+            if (!envVars.get(key).equals(value)) {
+                log.println(
+                        "Variable with name '" + key + "' already exists, current value: '" + envVars.get(key) +
+                                "', new value: '" + value + "'");
+            }
         }
         else {
             log.println("Create new variable " + key + "=" + value);
