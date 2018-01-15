@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
   This plug-in sets the display name of a build to something other than #1, #2, #3, ...
 </div>
