@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
     Normally build name consists of [file content]+[macro],<br/>
     this option reverses the order i.e. [macro]+[file content].

@@ -9,14 +9,20 @@ import javax.annotation.CheckForNull;
 import java.io.PrintStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Leo on 4/20/2016.
  * Helper to work with environment variables.
  */
 public class EnvironmentVarSetter implements EnvironmentContributingAction {
-    private PrintStream log;
+
+    @CheckForNull
+    private transient PrintStream log;
     private final Map<String, String> envVars = new ConcurrentHashMap<String, String>();
+
+    private static final Logger LOGGER = Logger.getLogger(EnvironmentVarSetter.class.getName());
 
     public static final String buildDisplayNameVar = "BUILD_DISPLAY_NAME";
 
@@ -46,13 +52,12 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
 
         if (envVars.containsKey(key)) {
             if (!envVars.get(key).equals(value)) {
-                log.println(
-                        "Variable with name '" + key + "' already exists, current value: '" + envVars.get(key) +
-                                "', new value: '" + value + "'");
+                log("Variable with name '%s' already exists, current value: '%s', new value: '%s'",
+                        key, envVars.get(key), value);
             }
         }
         else {
-            log.println("Create new variable " + key + "=" + value);
+            log("Create new variable %s=%s", key, value);
         }
 
         envVars.put(key, value);
@@ -60,12 +65,24 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
 
     public String getVar(String key) {
         if (envVars.containsKey(key)) {
-            log.println("Get var: " + key + "=" + envVars.get(key));
+            log("Get var: %s=%s", key, envVars.get(key));
             return envVars.get(key);
         }
         else {
-            log.println("Var '" + key + "' doesn't exist");
+            log("Var '%s' doesn't exist", key);
             return "";
+        }
+    }
+
+    private void log(String format, Object ... args) {
+        if (log == null && !LOGGER.isLoggable(Level.FINE)) { // not loggable
+            return;
+        }
+
+        String message = String.format(format, args);
+        LOGGER.fine(message);
+        if (log != null) {
+            log.println(message);
         }
     }
 
