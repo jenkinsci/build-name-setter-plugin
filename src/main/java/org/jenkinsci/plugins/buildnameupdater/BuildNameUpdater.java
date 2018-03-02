@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
@@ -166,11 +168,13 @@ public class BuildNameUpdater extends Builder {
         private static final long serialVersionUID = 1L;
 
         @Override
+        @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Rely on the default system encoding - legacy behavior")
         public String invoke(File file, VirtualChannel channel) throws IOException, InterruptedException {
             if (file.getAbsoluteFile().exists()){
                 LOGGER.log(Level.INFO, "File is found, reading...");
-                BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
-                return br.readLine();
+                try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
+                    return br.readLine();
+                }
             } else {
                 LOGGER.log(Level.WARNING, "File was not found.");
                 return "";
