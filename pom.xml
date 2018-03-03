@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>build-name-setter</artifactId>
-  <version>1.6.9</version>
+  <version>1.6.10-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <properties>
@@ -55,7 +55,7 @@
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
-    <tag>build-name-setter-1.6.9</tag>
+    <tag>build-name-setter-1.6.4</tag>
   </scm>
 
   <repositories>
