@@ -1,8 +1,7 @@
 target
-work
-.*
 !.gitignore
 *.iml
 *.ipr
 *.iws
 .DS_Store
+.idea
