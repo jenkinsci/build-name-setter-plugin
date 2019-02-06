@@ -7,10 +7,15 @@ that lets you specify a build name for each new build. Also this plugin updates 
 This plugin can be used in two ways:
 
 * Set build name at the begining and at the end of the build (both by default, it also can be ajusted)
+
 ![alt tag](./.README/Screenshot_build_env.png)
 
 * Set build name between two build steps (as a separate build step)
+
 ![alt tag](./.README/Screenshot_build_step.png)
 
 As the result you can obtain something like this:
+
 ![alt tag](./.README/Screenshot_build_name.png)
+
+The power of this plugin is based on [Macro Token](https://wiki.jenkins.io/display/JENKINS/Token+Macro+Plugin) so take a look what features you can use.
