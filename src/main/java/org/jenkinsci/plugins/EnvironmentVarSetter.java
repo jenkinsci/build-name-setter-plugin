@@ -1,16 +1,16 @@
 package org.jenkinsci.plugins;
 
+import java.io.PrintStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import hudson.EnvVars;
 import hudson.model.AbstractBuild;
 import hudson.model.EnvironmentContributingAction;
-import org.apache.commons.lang.StringUtils;
-
 import javax.annotation.CheckForNull;
-import java.io.PrintStream;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by Leo on 4/20/2016.
@@ -36,8 +36,7 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
         if (action == null) {
             action = new EnvironmentVarSetter(key, value, logger);
             build.addAction(action);
-        }
-        else {
+        } else {
             action.setVar(key, value);
         }
     }
@@ -55,8 +54,7 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
                 log("Variable with name '%s' already exists, current value: '%s', new value: '%s'",
                         key, envVars.get(key), value);
             }
-        }
-        else {
+        } else {
             log("Create new variable %s=%s", key, value);
         }
 
@@ -67,14 +65,13 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
         if (envVars.containsKey(key)) {
             log("Get var: %s=%s", key, envVars.get(key));
             return envVars.get(key);
-        }
-        else {
+        } else {
             log("Var '%s' doesn't exist", key);
             return "";
         }
     }
 
-    private void log(String format, Object ... args) {
+    private void log(String format, Object... args) {
         if (log == null && !LOGGER.isLoggable(Level.FINE)) { // not loggable
             return;
         }

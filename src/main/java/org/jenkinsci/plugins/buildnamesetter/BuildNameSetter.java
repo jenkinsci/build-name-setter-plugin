@@ -23,7 +23,7 @@ import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
 
 /**
  * Sets the build name at two configurable points during the build.
- *
+ * <p>
  * Once early on in the build, and another time later on.
  *
  * @author Kohsuke Kawaguchi
@@ -49,11 +49,10 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         }
         return this;
     }
-	
+
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        if (runAtStart)
-        {
+        if (runAtStart) {
             setDisplayName(build, listener);
         }
 
@@ -81,16 +80,16 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
-        return new MatrixAggregator(build,launcher,listener) {
+        return new MatrixAggregator(build, launcher, listener) {
             @Override
             public boolean startBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
+                setDisplayName(build, listener);
                 return super.startBuild();
             }
 
             @Override
             public boolean endBuild() throws InterruptedException, IOException {
-                setDisplayName(build,listener);
+                setDisplayName(build, listener);
                 return super.endBuild();
             }
         };

@@ -1,5 +1,6 @@
 <?jelly escape-by-default='true'?>
 <div>
-    This field can contain the following macros:<br/>
+    This field can contain the following macros:
+    <br/>
     <help xmlns="/lib/token-macro"/>
 </div>

@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.buildnameupdater;
 
-import javax.servlet.ServletException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,16 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.EnvironmentVarSetter;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-
-import jenkins.MasterToSlaveFileCallable;
-
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -29,9 +18,16 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+import javax.servlet.ServletException;
+import jenkins.MasterToSlaveFileCallable;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
+import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
- *
  * This plugin replace the build name with the first line from a file on a slave.
  *
  * @author Lev Mishin
@@ -85,11 +81,11 @@ public class BuildNameUpdater extends Builder {
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
         String buildNameToSet = "";
 
-        if (fromFile){
+        if (fromFile) {
             buildNameToSet = readFromFile(build, listener, buildName);
         }
 
-        if(fromMacro){
+        if (fromMacro) {
             String evaluatedMacro = getFromMacro(build, listener, macroTemplate);
 
             listener.getLogger().println("Evaluated macro: '" + evaluatedMacro + "'");
@@ -118,7 +114,7 @@ public class BuildNameUpdater extends Builder {
         }
     }
 
-    private String getFromMacro(AbstractBuild build, BuildListener listener, String macro){
+    private String getFromMacro(AbstractBuild build, BuildListener listener, String macro) {
         String result = null;
         try {
             result = TokenMacro.expandAll(build, listener, macro);
@@ -135,10 +131,10 @@ public class BuildNameUpdater extends Builder {
         return result;
     }
 
-    private String readFromFile(AbstractBuild build, BuildListener listener, String filePath){
+    private String readFromFile(AbstractBuild build, BuildListener listener, String filePath) {
         String version = "";
 
-        if (StringUtils.isBlank(filePath)){
+        if (StringUtils.isBlank(filePath)) {
             listener.getLogger().println("File path is empty.");
             return "";
         }
@@ -161,7 +157,7 @@ public class BuildNameUpdater extends Builder {
 
     @Override
     public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl)super.getDescriptor();
+        return (DescriptorImpl) super.getDescriptor();
     }
 
     private static class MyFileCallable extends MasterToSlaveFileCallable<String> {
@@ -170,7 +166,7 @@ public class BuildNameUpdater extends Builder {
         @Override
         @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Rely on the default system encoding - legacy behavior")
         public String invoke(File file, VirtualChannel channel) throws IOException, InterruptedException {
-            if (file.getAbsoluteFile().exists()){
+            if (file.getAbsoluteFile().exists()) {
                 LOGGER.log(Level.INFO, "File is found, reading...");
                 try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
                     return br.readLine();
@@ -189,9 +185,8 @@ public class BuildNameUpdater extends Builder {
         }
 
         @SuppressWarnings("unused")
-        public FormValidation doCheckName(@QueryParameter String value)
-                throws IOException, ServletException {
-            if (value.length() == 0)
+        public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
+            if (value.isEmpty())
                 return FormValidation.error("Please set a file path");
             return FormValidation.ok();
         }
