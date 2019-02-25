@@ -1,15 +1,15 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<f:entry title="${%Build Name}" field="template">
-		<f:textbox default="#$${BUILD_NUMBER}" />
-	</f:entry>
-	<f:advanced>
-		<f:entry title="${%Set build name before build starts}">
-			<f:checkbox field="runAtStart" default="true" value="True" />
-		</f:entry>
-		<f:entry title="${%Set build name after build ends}">
-			<f:checkbox field="runAtEnd" default="true" value="True" />
-		</f:entry>
-	</f:advanced>
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:entry title="${%Build Name}" field="template">
+        <f:textbox default="#$${BUILD_NUMBER}"/>
+    </f:entry>
+    <f:advanced>
+        <f:entry title="${%Set build name before build starts}">
+            <f:checkbox field="runAtStart" default="true" value="True"/>
+        </f:entry>
+        <f:entry title="${%Set build name after build ends}">
+            <f:checkbox field="runAtEnd" default="true" value="True"/>
+        </f:entry>
+    </f:advanced>
 </j:jelly>
