@@ -40,6 +40,15 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
         this.runAtEnd = toBooleanDefaultIfNull(runAtEnd, true);
     }
 
+
+    public Boolean getRunAtStart() {
+        return runAtStart;
+    }
+
+    public Boolean getRunAtEnd() {
+        return runAtEnd;
+    }
+
     protected Object readResolve() {
         if (runAtStart == null) {
             runAtStart = true;
