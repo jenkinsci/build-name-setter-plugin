@@ -1,6 +1,5 @@
 [![Build Travis](https://img.shields.io/travis/jenkinsci/build-name-setter-plugin/master.svg)](https://travis-ci.org/jenkinsci/build-name-setter-plugin)
-
-
+[![Build status](https://ci.appveyor.com/api/projects/status/niut5mwbxdnht3pt/branch/master?svg=true)](https://ci.appveyor.com/project/damianszczepanik/build-name-setter-plugin/branch/master)
 # Build name setter plugin for Jenkins
 
 This plugin sets the display name of a build to something other than #1, #2, #3, ... so that you can use an identifier
