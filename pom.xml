@@ -10,7 +10,8 @@
     <artifactId>build-name-setter</artifactId>
     <version>1.7.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
-    <name>Build Name Setter</name>
+    <name>Build Name and Description Setter</name>
+    <description>Changes default build name and description.</description>
     <url>http://wiki.jenkins.io/display/JENKINS/Build+Name+Setter+Plugin</url>
 
     <properties>
@@ -56,10 +57,6 @@
             <version>1.13</version>
         </dependency>
     </dependencies>
-
-    <description>
-        Changes default build name.
-    </description>
 
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
