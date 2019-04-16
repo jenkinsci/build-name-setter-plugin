@@ -14,6 +14,7 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
@@ -29,7 +30,7 @@ import org.kohsuke.stapler.DataBoundSetter;
  */
 public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable {
 
-    private String nameTemplate;
+    private String template;
     private String descriptionTemplate;
     private Boolean runAtStart = true;
     private Boolean runAtEnd = true;
@@ -37,7 +38,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     @DataBoundConstructor
     public BuildNameSetter(String template, Boolean runAtStart, Boolean runAtEnd) {
         // attribute is named differently than parameter that must be backwards compatible
-        this.nameTemplate = template;
+        this.template = template;
         this.runAtStart = toBooleanDefaultIfNull(runAtStart, true);
         this.runAtEnd = toBooleanDefaultIfNull(runAtEnd, true);
     }
@@ -52,12 +53,12 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     @DataBoundSetter
-    public void setTemplate(String nameTemplate) {
-        this.nameTemplate = nameTemplate;
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public String getTemplate() {
-        return nameTemplate;
+        return template;
     }
 
     public Boolean getRunAtStart() {
@@ -99,7 +100,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
 
     private void setName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
         try {
-            final String name = TokenMacro.expandAll(build, listener, nameTemplate);
+            final String name = TokenMacro.expandAll(build, listener, template);
             listener.getLogger().println("New build name is '" + name + "'");
             build.setDisplayName(name);
             EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, name, listener.getLogger());
@@ -109,10 +110,15 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     private void setDescription(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
+        // when the description is not provided (because plugin was updated but configuration not)
+        if (StringUtils.isEmpty(descriptionTemplate)) {
+            return;
+        }
+
         try {
             final String description = TokenMacro.expandAll(build, listener, descriptionTemplate);
             listener.getLogger().println("New build description is '" + description + "'");
-            build.setDescription(description);
+                build.setDescription(description);
         } catch (MacroEvaluationException e) {
             listener.getLogger().println(e.getMessage());
         }
