@@ -14,10 +14,6 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.EnvironmentVarSetter;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -80,63 +76,45 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
     }
 
     @Override
-    public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+    public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) {
+
+        Executor executor = new Executor(build, listener);
+
         if (runAtStart) {
-            setName(build, listener);
-            setDescription(build, listener);
+            executor.setName(template);
+            executor.setDescription(descriptionTemplate);
         }
 
         return new Environment() {
             @Override
-            public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
+            public boolean tearDown(AbstractBuild build, BuildListener listener) {
                 if (runAtEnd) {
-                    setName(build, listener);
-                    setDescription(build, listener);
+                    executor.setName(template);
+                    executor.setDescription(descriptionTemplate);
                 }
                 return true;
             }
         };
     }
 
-    private void setName(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-        try {
-            final String name = TokenMacro.expandAll(build, listener, template);
-            listener.getLogger().println("New build name is '" + name + "'");
-            build.setDisplayName(name);
-            EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, name, listener.getLogger());
-        } catch (MacroEvaluationException e) {
-            listener.getLogger().println(e.getMessage());
-        }
-    }
 
-    private void setDescription(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-        // when the description is not provided (because plugin was updated but configuration not)
-        if (StringUtils.isEmpty(descriptionTemplate)) {
-            return;
-        }
-
-        try {
-            final String description = TokenMacro.expandAll(build, listener, descriptionTemplate);
-            listener.getLogger().println("New build description is '" + description + "'");
-                build.setDescription(description);
-        } catch (MacroEvaluationException e) {
-            listener.getLogger().println(e.getMessage());
-        }
-    }
-
+    // support for matrix project
     public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
+
+        Executor executor = new Executor(build, listener);
+
         return new MatrixAggregator(build, launcher, listener) {
             @Override
             public boolean startBuild() throws InterruptedException, IOException {
-                setName(build, listener);
-                setDescription(build, listener);
+                executor.setName(template);
+                executor.setDescription(descriptionTemplate);
                 return super.startBuild();
             }
 
             @Override
             public boolean endBuild() throws InterruptedException, IOException {
-                setName(build, listener);
-                setDescription(build, listener);
+                executor.setName(template);
+                executor.setDescription(descriptionTemplate);
                 return super.endBuild();
             }
         };
