@@ -24,8 +24,6 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
 
     private static final Logger LOGGER = Logger.getLogger(EnvironmentVarSetter.class.getName());
 
-    public static final String buildDisplayNameVar = "BUILD_DISPLAY_NAME";
-
     public EnvironmentVarSetter(@CheckForNull String key, @CheckForNull String value, @CheckForNull PrintStream logger) {
         log = logger;
         envVars.put(key, value);

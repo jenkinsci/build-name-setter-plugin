@@ -21,7 +21,6 @@ import hudson.util.FormValidation;
 import javax.servlet.ServletException;
 import jenkins.MasterToSlaveFileCallable;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -100,15 +99,13 @@ public class BuildNameUpdater extends Builder {
         return true;
     }
 
-    private void setDisplayName(AbstractBuild build, BuildListener listener, final String result) {
-        listener.getLogger().println("Setting build name to '" + result + "'");
+    private void setDisplayName(AbstractBuild build, BuildListener listener, String result) {
         if (StringUtils.isBlank(result)) {
-            listener.getLogger().println("Build name is empty, nothing to set.");
             return;
         }
         try {
+            listener.getLogger().println("Setting build name to '" + result + "'");
             build.setDisplayName(result);
-            EnvironmentVarSetter.setVar(build, EnvironmentVarSetter.buildDisplayNameVar, result, listener.getLogger());
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
         }
@@ -200,4 +197,3 @@ public class BuildNameUpdater extends Builder {
         }
     }
 }
-
