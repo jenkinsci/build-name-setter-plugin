@@ -25,34 +25,26 @@ As the result you can obtain something like this:
 
 # Piepline
 This is how the plugin can be used via pipeline approach. Name and the description can be changed like any other steps.
-
+Mind that there are a few conventions which can be used to modify name or description:
 ```groovy
 pipeline {
     agent any
-
     stages {
         stage("Initialization") {
             steps {
                 // use name of the patchset as the build name
-                setBuildName("${GERRIT_CHANGE_SUBJECT}")
-                setBuildDescription("Executed @ ${NODE_NAME}")
+                buildName "${GERRIT_CHANGE_SUBJECT}"
+                buildDescription "Executed @ ${NODE_NAME}"
             }
         }
     }
     post {
         failure {
             // in case of failure, we'd like to have simple 'git blame' on build history :)
-            setBuildDescription("Committer: ${GERRIT_PATCHSET_UPLOADER_NAME}")
+            currentBuild.displayName = 'This build needs help!!!'
+            buildDescription("Committer: ${GERRIT_PATCHSET_UPLOADER_NAME}")
         }
     }
-}
-```
-
-There is also possibility to use less modern and more scripting approach such as:
-```groovy
-script {
-    currentBuild.displayName = "this is name"
-    currentBuild.description = "and the description"
 }
 ```
 

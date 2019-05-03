@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins;
+package org.jenkinsci.plugins.pipeline;
 
 import java.io.IOException;
 
@@ -20,25 +20,25 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class BuildDescriptionStep extends Builder implements SimpleBuildStep {
 
-    private final String descriptionName;
+    private final String descriptionTemplate;
 
     @DataBoundConstructor
-    public BuildDescriptionStep(String descriptionName) {
-        this.descriptionName = descriptionName;
+    public BuildDescriptionStep(String descriptionTemplate) {
+        this.descriptionTemplate = descriptionTemplate;
     }
 
-    public String getDescriptionName() {
-        return descriptionName;
+    public String getDescriptionTemplate() {
+        return descriptionTemplate;
     }
 
     @Override
     public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
             throws IOException {
         Executor executor = new Executor(run, listener);
-        executor.setDescription(descriptionName);
+        executor.setDescription(descriptionTemplate);
     }
 
-    @Symbol("setBuildDescription")
+    @Symbol("buildDescription")
     @Extension
     public static class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
