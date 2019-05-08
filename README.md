@@ -23,7 +23,7 @@ As the result you can obtain something like this:
 
 ![alt tag](./.README/Screenshot_build_name.png)
 
-# Piepline
+# Pipeline
 This is how the plugin can be used via pipeline approach. Name and the description can be changed like any other steps.
 Mind that there are a few conventions which can be used to modify name or description:
 ```groovy
