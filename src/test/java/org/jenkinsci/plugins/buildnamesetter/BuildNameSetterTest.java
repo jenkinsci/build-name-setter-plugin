@@ -27,7 +27,7 @@ public class BuildNameSetterTest {
 		fooProj.getBuildWrappersList().add(getDefaultSetter("a_#${BUILD_NUMBER}")); 
 		
 		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
-		asssertDisplayName(fooBuild, "a_#1");
+		assertDisplayName(fooBuild, "a_#1");
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class BuildNameSetterTest {
 		barProj.getBuildWrappersList().add(getDefaultSetter("b_${ENV,var=\"JOB_NAME\"}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
-		asssertDisplayName(barBuild, "b_bar");
+		assertDisplayName(barBuild, "b_bar");
 	}
 
 	@Bug(13347)
@@ -46,7 +46,7 @@ public class BuildNameSetterTest {
 		barProj.getBuildWrappersList().add(getDefaultSetter("c_${JOB_NAME}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
-		asssertDisplayName(barBuild, "c_bar");
+		assertDisplayName(barBuild, "c_bar");
 	}
 
 	@Bug(13347)
@@ -56,7 +56,7 @@ public class BuildNameSetterTest {
 		barProj.getBuildWrappersList().add(getDefaultSetter("c_${JOB_NAME}_d_${JOB_NAME}")); 
 		
 		FreeStyleBuild barBuild = barProj.scheduleBuild2(0).get();
-		asssertDisplayName(barBuild, "c_bar_d_bar");
+		assertDisplayName(barBuild, "c_bar_d_bar");
 	}
 	
 	@Bug(13347)
@@ -66,7 +66,7 @@ public class BuildNameSetterTest {
 		fooProj.getBuildWrappersList().add(getDefaultSetter("d_${NODE_NAME}_${ENV,var=\"JOB_NAME\"}")); 
 		
 		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
-		asssertDisplayName(fooBuild, "d_master_foo");
+		assertDisplayName(fooBuild, "d_master_foo");
 	}
 
 	@Bug(34181)
@@ -76,20 +76,22 @@ public class BuildNameSetterTest {
 		fooProj.getBuildWrappersList().add(new BuildNameSetter("${ENV,var=\"JOB_NAME\"}", null, null));
 
 		FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
-		asssertDisplayName(fooBuild, "foo");
+		assertDisplayName(fooBuild, "foo");
 	}
 
-	private void asssertDisplayName(FreeStyleBuild build, String expectedName) {
+	private void assertDisplayName(FreeStyleBuild build, String expectedName) {
 		assertEquals(Result.SUCCESS, build.getResult());
 		assertEquals(expectedName, build.getDisplayName());
 		EnvironmentVarSetter action = build.getAction(EnvironmentVarSetter.class);
-        	EnvVars envVars = null;
-        	try {
-            		envVars = build.getEnvironment(TaskListener.NULL);
-        	} catch (Exception e) {
-            		e.printStackTrace();
-            		Assert.fail("Exception was thrown during getting build environment.");
-        	}
+		assertEquals(expectedName, action.getVar(EnvironmentVarSetter.buildDisplayNameVar));
+		EnvVars envVars = null;
+		try {
+			envVars = build.getEnvironment(TaskListener.NULL);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception was thrown during getting build environment.");
+		}
+		assertEquals(expectedName, envVars.get(EnvironmentVarSetter.buildDisplayNameVar));
 	}
 
 	private BuildNameSetter getDefaultSetter(String template) {
