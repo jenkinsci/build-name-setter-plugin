@@ -50,7 +50,3 @@ pipeline {
 
 # Scripting
 The power of this plugin is based on [Macro Token](https://wiki.jenkins.io/display/JENKINS/Token+Macro+Plugin) so take a look what features you can use.
-
-# Documentation
-You may find useful below link if you like to contribute and add new feature:
-- https://docs.microsoft.com/en-us/outlook/actionable-messages/send-via-connectors
