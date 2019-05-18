@@ -7,7 +7,7 @@
 
 This plugin sets the display name of a build to something other than #1, #2, #3, ... so that you can use an identifier
 that makes more sense in your context. When you install this plugin, your job configuration page gets additional setting
-that lets you specify a build name for each new build. Also this plugin updates environment build variable `BUILD_DISPLAY_NAME` so it's value can be used in other build steps.
+that lets you specify a build name for each new build.
 
 This plugin can be used in two ways:
 
