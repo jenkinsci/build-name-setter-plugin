@@ -29,7 +29,11 @@ public class Executor {
             listener.getLogger().println("New run name is '" + name + "'");
             run.setDisplayName(name);
         } catch (IOException e) {
-            listener.getLogger().println(e.getMessage());
+            listener.error(e.getMessage());
+        } catch (MacroEvaluationException e) {
+            // should be marked as failure but then many configuration
+            // that work with older version of the plugin will fail
+            listener.getLogger().println("Failed to evaluate name macro:" + e.toString());
         }
     }
 
@@ -44,15 +48,19 @@ public class Executor {
             listener.getLogger().println("New run description is '" + description + "'");
             run.setDescription(description);
         } catch (IOException e) {
-            listener.getLogger().println(e.getMessage());
+            listener.error(e.getMessage());
+        } catch (MacroEvaluationException e) {
+            // should be marked as failure but then many configuration
+            // that work with older version of the plugin will fail
+            listener.getLogger().println("Failed to evaluate description macro:" + e.toString());
         }
     }
 
-    private String evaluateMacro(String template) {
+    private String evaluateMacro(String template) throws MacroEvaluationException {
         try {
             File workspace = run.getRootDir();
             return TokenMacro.expandAll(run, new FilePath(workspace), listener, template);
-        } catch (InterruptedException | IOException | MacroEvaluationException e) {
+        } catch (InterruptedException | IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
