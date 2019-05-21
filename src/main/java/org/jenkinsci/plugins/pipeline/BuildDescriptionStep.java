@@ -1,7 +1,5 @@
 package org.jenkinsci.plugins.pipeline;
 
-import java.io.IOException;
-
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -32,8 +30,7 @@ public class BuildDescriptionStep extends Builder implements SimpleBuildStep {
     }
 
     @Override
-    public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException {
+    public void perform(Run run, FilePath workspace, Launcher launcher, TaskListener listener) {
         Executor executor = new Executor(run, listener);
         executor.setDescription(descriptionTemplate);
     }
