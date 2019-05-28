@@ -108,6 +108,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
             public boolean startBuild() throws InterruptedException, IOException {
                 executor.setName(template);
                 executor.setDescription(descriptionTemplate);
+
                 return super.startBuild();
             }
 
@@ -115,6 +116,7 @@ public class BuildNameSetter extends BuildWrapper implements MatrixAggregatable 
             public boolean endBuild() throws InterruptedException, IOException {
                 executor.setName(template);
                 executor.setDescription(descriptionTemplate);
+
                 return super.endBuild();
             }
         };

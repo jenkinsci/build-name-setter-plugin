@@ -21,6 +21,7 @@ import hudson.util.FormValidation;
 import javax.servlet.ServletException;
 import jenkins.MasterToSlaveFileCallable;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.buildnamesetter.Executor;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -93,22 +94,11 @@ public class BuildNameUpdater extends Builder {
         }
 
         if (StringUtils.isNotBlank(buildNameToSet)) {
-            setDisplayName(build, listener, buildNameToSet);
+            Executor executor = new Executor(build, listener);
+            executor.setName(macroTemplate);
         }
 
         return true;
-    }
-
-    private void setDisplayName(AbstractBuild build, BuildListener listener, String result) {
-        if (StringUtils.isBlank(result)) {
-            return;
-        }
-        try {
-            listener.getLogger().println("Setting build name to '" + result + "'");
-            build.setDisplayName(result);
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Failed to set display name: ", e);
-        }
     }
 
     private String getFromMacro(AbstractBuild build, BuildListener listener, String macro) {

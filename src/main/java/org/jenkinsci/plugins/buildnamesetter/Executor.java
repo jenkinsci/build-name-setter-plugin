@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 import hudson.FilePath;
+import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 
@@ -28,6 +30,7 @@ public class Executor {
             String name = evaluateMacro(nameTemplate);
             listener.getLogger().println("New run name is '" + name + "'");
             run.setDisplayName(name);
+            setVariable(nameTemplate);
         } catch (IOException e) {
             listener.error(e.getMessage());
         } catch (MacroEvaluationException e) {
@@ -56,7 +59,17 @@ public class Executor {
         }
     }
 
-    private String evaluateMacro(String template) throws MacroEvaluationException {
+    public void setVariable(String nameTemplate) throws MacroEvaluationException {
+        if (!(run instanceof AbstractBuild)) {
+            return;
+        }
+
+        AbstractBuild abstractBuild = (AbstractBuild) run;
+        EnvironmentVarSetter.setVar(abstractBuild, EnvironmentVarSetter.buildDisplayNameVar,
+                evaluateMacro(nameTemplate), listener.getLogger());
+    }
+
+    public String evaluateMacro(String template) throws MacroEvaluationException {
         try {
             File workspace = run.getRootDir();
             return TokenMacro.expandAll(run, new FilePath(workspace), listener, template);
