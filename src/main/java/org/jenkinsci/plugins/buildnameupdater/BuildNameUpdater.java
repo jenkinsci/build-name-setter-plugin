@@ -95,7 +95,7 @@ public class BuildNameUpdater extends Builder {
 
         if (StringUtils.isNotBlank(buildNameToSet)) {
             Executor executor = new Executor(build, listener);
-            executor.setName(macroTemplate);
+            executor.setName(buildNameToSet);
         }
 
         return true;
@@ -139,7 +139,7 @@ public class BuildNameUpdater extends Builder {
         }
 
         listener.getLogger().println("Loaded version is " + version);
-        return version == null ? "" : version;
+        return StringUtils.defaultString(version);
     }
 
     @Override
