@@ -12,7 +12,7 @@
     <packaging>hpi</packaging>
     <name>Build Name and Description Setter</name>
     <description>Changes default build name and description.</description>
-    <url>http://wiki.jenkins.io/display/JENKINS/Build+Name+Setter+Plugin</url>
+    <url>https://github.com/jenkinsci/build-name-setter-plugin</url>
 
     <properties>
         <jenkins.version>2.15</jenkins.version>
