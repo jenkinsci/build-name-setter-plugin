@@ -126,7 +126,12 @@ public class BuildNameUpdater extends Builder {
             return "";
         }
 
-        FilePath fp = new FilePath(build.getWorkspace(), filePath);
+        FilePath workspace = build.getWorkspace();
+        if (workspace == null) {
+            listener.getLogger().println("Workspace is empty.");
+            return "";
+        }
+        FilePath fp = new FilePath(workspace, filePath);
 
         listener.getLogger().println("Getting version from file: " + fp);
 
