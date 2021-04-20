@@ -50,3 +50,8 @@ pipeline {
 
 # Scripting
 The power of this plugin is based on [Macro Token](https://wiki.jenkins.io/display/JENKINS/Token+Macro+Plugin) so take a look what features you can use.
+
+# CHANGELOG
+
+2.1.1 requires at least 2.15 of Token Macro Plugin
+
