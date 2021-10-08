@@ -1,6 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
     This plug-in sets the display name and description of a build to something other than #1, #2, #3, ...
-    <br/>
-    <b>Now also with support for build description and <a href="https://jenkins.io/solutions/pipeline/">pipeline</a> approach.</b>
 </div>

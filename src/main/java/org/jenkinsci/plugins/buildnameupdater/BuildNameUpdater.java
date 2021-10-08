@@ -136,7 +136,7 @@ public class BuildNameUpdater extends Builder {
         listener.getLogger().println("Getting version from file: " + fp);
 
         try {
-            version = fp.act(new MyFileCallable());
+            version = fp.act(new FileCallable());
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to read file: ", e);
         } catch (InterruptedException e) {
@@ -152,7 +152,7 @@ public class BuildNameUpdater extends Builder {
         return (DescriptorImpl) super.getDescriptor();
     }
 
-    private static class MyFileCallable extends MasterToSlaveFileCallable<String> {
+    private static class FileCallable extends MasterToSlaveFileCallable<String> {
         private static final long serialVersionUID = 1L;
 
         @Override
