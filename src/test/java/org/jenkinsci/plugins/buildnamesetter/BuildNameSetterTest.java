@@ -67,7 +67,7 @@ public class BuildNameSetterTest {
         fooProj.getBuildWrappersList().add(getDefaultSetter("d_${NODE_NAME}_${ENV,var=\"JOB_NAME\"}"));
 
         FreeStyleBuild fooBuild = fooProj.scheduleBuild2(0).get();
-        assertDisplayName(fooBuild, "d_master_foo");
+        assertDisplayName(fooBuild, "d_built-in_foo");
     }
 
     @Bug(34181)
