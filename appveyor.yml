@@ -1,4 +1,4 @@
-os: Windows Server 2022
+os: Windows Server 2019
 
 version: '{build}'
 
