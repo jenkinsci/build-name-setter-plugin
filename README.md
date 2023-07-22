@@ -1,4 +1,4 @@
-[![Build Travis](https://img.shields.io/travis/jenkinsci/build-name-setter-plugin/master.svg)](https://travis-ci.org/jenkinsci/build-name-setter-plugin)
+[![Build Status](https://ci.jenkins.io/job/Plugins/job/build-name-setter-plugin/job/master/badge/icon)](https://ci.jenkins.io/job/Plugins/job/build-name-setter-plugin/job/master/)
 [![Build status](https://ci.appveyor.com/api/projects/status/niut5mwbxdnht3pt/branch/master?svg=true)](https://ci.appveyor.com/project/damianszczepanik/build-name-setter-plugin/branch/master)
 
 [![Popularity](https://img.shields.io/jenkins/plugin/i/build-name-setter.svg)](https://plugins.jenkins.io/build-name-setter)
