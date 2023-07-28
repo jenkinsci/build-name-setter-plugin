@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>build-name-setter</artifactId>
-    <version>1.6b9ac5ce-beta-SNAPSHOT</version>
+    <version>build-name-setter-1.6b8ac5ce-2-beta</version>
     <packaging>hpi</packaging>
     <name>Build Name and Description Setter</name>
     <description>Changes default build name and description.</description>
@@ -88,7 +88,7 @@
         <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/build-name-setter-plugin</url>
-      <tag>HEAD</tag>
+      <tag>build-name-setter-build-name-setter-1.6b8ac5ce-2-beta</tag>
   </scm>
 
     <repositories>
