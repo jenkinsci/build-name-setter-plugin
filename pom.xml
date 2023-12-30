@@ -1,16 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.75</version>
+        <version>4.76</version>
         <relativePath />
     </parent>
 
     <artifactId>build-name-setter</artifactId>
     <version>2.4.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-2.387.x</artifactId>
+                <version>2483.v3b_22f030990a_</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <name>Build Name and Description Setter</name>
     <description>Changes default build name and description.</description>
     <url>https://github.com/jenkinsci/build-name-setter-plugin</url>
@@ -20,11 +33,22 @@
         <asm.version>9.0</asm.version>
     </properties>
 
+    <scm>
+        <connection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/build-name-setter-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>https://ci.jenkins.io/job/Plugins/job/build-name-setter-plugin/</url>
+    </ciManagement>
+
     <licenses>
         <license>
-            <name>The MIT license</name>
+            <name>MIT</name>
             <url>https://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
         </license>
     </licenses>
 
@@ -46,7 +70,20 @@
         </developer>
     </developers>
 
-    <dependencyManagement>
+    <repositories>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
         <dependencies>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -68,17 +105,7 @@
                 <artifactId>asm-util</artifactId>
                 <version>${asm.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.401.x</artifactId>
-                <version>2612.v3d6a_2128c0ef</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
-    <dependencies>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>token-macro</artifactId>
@@ -88,27 +115,4 @@
             <artifactId>matrix-project</artifactId>
         </dependency>
     </dependencies>
-
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/build-name-setter-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/build-name-setter-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/build-name-setter-plugin</url>
-      <tag>HEAD</tag>
-  </scm>
-
-    <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>
-
