@@ -1,4 +1,8 @@
-buildPlugin(useContainerAgent: true, configurations: [
-  [ platform: 'linux', jdk: '21' ],
-  [ platform: 'windows', jdk: '17' ],
-])
+// `buildPlugin` step provided by: https://github.com/jenkins-infra/pipeline-library
+
+buildPlugin(
+  useContainerAgent: true,
+  failFast: false,  
+  platforms: ['linux', 'windows'],
+  jdkVersions: [11, 17, 21]
+)
