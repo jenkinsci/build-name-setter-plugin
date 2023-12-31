@@ -16,8 +16,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.387.x</artifactId>
-                <version>2483.v3b_22f030990a_</version>
+                <artifactId>bom-2.401.x</artifactId>
+                <version>2675.v1515e14da_7a_6</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -30,9 +30,9 @@
 
     <properties>
         <jenkins.version>2.401.3</jenkins.version>
+        <!--Enabling static analysis using spotbugs checks-->
         <spotbugs.effort>Max</spotbugs.effort>
-     	<spotbugs.threshold>Low</spotbugs.threshold>
-        <asm.version>9.0</asm.version>
+     	  <spotbugs.threshold>Low</spotbugs.threshold> <!--Decreased threshold for more deeper checks-->
     </properties>
 
     <scm>
@@ -90,22 +90,18 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-util</artifactId>
-                <version>${asm.version}</version>
             </dependency>
 
         <dependency>
