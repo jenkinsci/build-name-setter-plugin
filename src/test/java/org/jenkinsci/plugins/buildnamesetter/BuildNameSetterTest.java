@@ -14,7 +14,7 @@ import org.jenkinsci.plugins.EnvironmentVarSetter;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.Bug;
+import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 
 public class BuildNameSetterTest {
@@ -40,7 +40,7 @@ public class BuildNameSetterTest {
         assertDisplayName(barBuild, "b_bar");
     }
 
-    @Bug(13347)
+    @Issue("13347")
     @Test
     public void shouldExpand_JOB_NAME_macro() throws InterruptedException, ExecutionException, IOException {
         FreeStyleProject barProj = jenkins.createFreeStyleProject("bar");
@@ -50,7 +50,7 @@ public class BuildNameSetterTest {
         assertDisplayName(barBuild, "c_bar");
     }
 
-    @Bug(13347)
+    @Issue("13347")
     @Test
     public void shouldExpand_JOB_NAME_macro_twice() throws InterruptedException, ExecutionException, IOException {
         FreeStyleProject barProj = jenkins.createFreeStyleProject("bar");
@@ -60,9 +60,9 @@ public class BuildNameSetterTest {
         assertDisplayName(barBuild, "c_bar_d_bar");
     }
 
-    @Bug(13347)
+    @Issue("13347")
     @Test
-    public void shouldExpand_JOB_NAME_macro_and_JOB_NAME_full_env_macro() throws InterruptedException, ExecutionException, IOException {
+    public void shouldExpand_NODE_NAME_macro_and_JOB_NAME_full_env_macro() throws InterruptedException, ExecutionException, IOException {
         FreeStyleProject fooProj = jenkins.createFreeStyleProject("foo");
         fooProj.getBuildWrappersList().add(getDefaultSetter("d_${NODE_NAME}_${ENV,var=\"JOB_NAME\"}"));
 
@@ -70,7 +70,7 @@ public class BuildNameSetterTest {
         assertDisplayName(fooBuild, "d_built-in_foo");
     }
 
-    @Bug(34181)
+    @Issue("34181")
     @Test
     public void shouldUse_default_config_values_if_null() throws InterruptedException, ExecutionException, IOException {
         FreeStyleProject fooProj = jenkins.createFreeStyleProject("foo");
