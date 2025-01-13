@@ -16,7 +16,7 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.440.x</artifactId>
+                <artifactId>bom-${jenkins.baseline}.x</artifactId>
                 <version>3435.v238d66a_043fb_</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -32,7 +32,9 @@
         <revision>2.4.4</revision>
         <changelist>-SNAPSHOT</changelist>
         <gitHubRepo>jenkinsci/build-name-setter-plugin</gitHubRepo>
-        <jenkins.version>2.440.3</jenkins.version>
+        <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
+        <jenkins.baseline>2.440</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.3</jenkins.version>
         <!--Enabling static analysis using spotbugs checks-->
         <spotbugs.effort>Max</spotbugs.effort>
      	  <spotbugs.threshold>Low</spotbugs.threshold> <!--Decreased threshold for more deeper checks-->
