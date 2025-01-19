@@ -60,13 +60,10 @@ public class Executor {
     }
 
     public void setVariable(String nameTemplate) throws MacroEvaluationException {
-        if (!(run instanceof AbstractBuild)) {
-            return;
+        if (run instanceof AbstractBuild abstractBuild) {
+            EnvironmentVarSetter.setVar(abstractBuild, EnvironmentVarSetter.buildDisplayNameVar,
+                    evaluateMacro(nameTemplate), listener.getLogger());
         }
-
-        AbstractBuild abstractBuild = (AbstractBuild) run;
-        EnvironmentVarSetter.setVar(abstractBuild, EnvironmentVarSetter.buildDisplayNameVar,
-                evaluateMacro(nameTemplate), listener.getLogger());
     }
 
     public String evaluateMacro(String template) throws MacroEvaluationException {
