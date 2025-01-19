@@ -18,7 +18,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import jenkins.MasterToSlaveFileCallable;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.buildnamesetter.Executor;

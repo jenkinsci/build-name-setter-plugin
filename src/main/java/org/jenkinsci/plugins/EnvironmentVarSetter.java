@@ -76,7 +76,7 @@ public class EnvironmentVarSetter implements EnvironmentContributingAction {
             return;
         }
 
-        String message = String.format(format, args);
+        String message = format.formatted(args);
         LOGGER.fine(message);
         if (log != null) {
             log.println(message);
