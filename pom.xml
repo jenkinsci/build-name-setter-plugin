@@ -37,7 +37,7 @@
         <jenkins.version>${jenkins.baseline}.3</jenkins.version>
         <!--Enabling static analysis using spotbugs checks-->
         <spotbugs.effort>Max</spotbugs.effort>
-     	  <spotbugs.threshold>Low</spotbugs.threshold> <!--Decreased threshold for more deeper checks-->
+        <spotbugs.threshold>Low</spotbugs.threshold> <!--Decreased threshold for more deeper checks-->
     </properties>
 
     <scm>
