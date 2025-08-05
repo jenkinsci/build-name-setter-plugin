@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.buildnamesetter;
 
-import static org.apache.commons.lang.BooleanUtils.toBooleanDefaultIfNull;
+import static org.apache.commons.lang3.BooleanUtils.toBooleanDefaultIfNull;
 
 import java.io.IOException;
 

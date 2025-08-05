@@ -10,7 +10,7 @@ import hudson.EnvVars;
 import hudson.model.AbstractBuild;
 import hudson.model.EnvironmentContributingAction;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Leo on 4/20/2016.
